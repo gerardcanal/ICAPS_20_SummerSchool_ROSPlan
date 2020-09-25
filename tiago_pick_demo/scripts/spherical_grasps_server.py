@@ -21,6 +21,7 @@
 #   * Job van Dieten
 #   * Jordi Pages
 
+# Modified for ICAPS Summer School 2020 by Gerard Canal
 
 import rospy
 import numpy as np
@@ -304,6 +305,7 @@ class SphericalGrasps(object):
         jtpoint2.time_from_start = rospy.Duration(
             self._time_pre_grasp_posture +
             self._time_grasp_posture + self._time_grasp_posture_final)
+        jtpoint2.effort = [-2.5]*len(jtpoint2.positions)
         grasp_posture.points.append(jtpoint2)
 
         g.pre_grasp_posture = pre_grasp_posture
