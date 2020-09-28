@@ -17,8 +17,8 @@ bool RPMoveBaseInterface::concreteCallback(
     goal.target_pose.header.stamp = ros::Time::now();
 
     std::vector<double> position, orientation;
-    _nh.getParam("/wps/red_table/position", position);
-    _nh.getParam("/wps/red_table/orientation", orientation);
+    _nh.getParam("/wps/" + msg->parameters[0].value + "/position", position);
+    _nh.getParam("/wps/"+ msg->parameters[0].value + "/orientation", orientation);
 
     goal.target_pose.pose.position.x = position[0];
     goal.target_pose.pose.position.y = position[1];
