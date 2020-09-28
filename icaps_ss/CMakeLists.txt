@@ -9,7 +9,7 @@ project(icaps_ss)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   std_msgs
-  std_srvs
+  std_srvs rosplan_planning_system
 )
 
 ## System dependencies are found with CMake's conventions
@@ -115,7 +115,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -132,7 +132,17 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/icaps_ss_node.cpp)
+add_executable(rpainterface_pick src/RPInterfaces/RPPickActionInterface.cpp include/RPInterfaces/RPPickActionInterface.h)
+add_dependencies(rpainterface_pick ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rpainterface_pick ${catkin_LIBRARIES})
+
+add_executable(rpainterface_place src/RPInterfaces/RPPlaceActionInterface.cpp include/RPInterfaces/RPPlaceActionInterface.h)
+add_dependencies(rpainterface_place ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rpainterface_place ${catkin_LIBRARIES})
+
+add_executable(rpainterface_move_base src/RPInterfaces/RPMoveBaseActionInterface.cpp include/RPInterfaces/RPMoveBaseActionInterface.h)
+add_dependencies(rpainterface_move_base ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rpainterface_move_base ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
