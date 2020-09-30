@@ -9,6 +9,7 @@
     (box_at_wp ?box - box ?wp - wp)
     (box_on_robot ?box - box ?robot - robot)
     (robot_does_not_have_box ?robot - robot)
+    (wp_visited ?wp - wp)
 )
 
 (:functions
@@ -24,6 +25,7 @@
     )
  :effect (and
     (at start (not (robot_at_wp ?robot ?from)))
+    (at start (wp_visited ?to))
     (at end (robot_at_wp ?robot ?to))
     )
 )

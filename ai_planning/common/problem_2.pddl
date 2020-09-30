@@ -21,9 +21,16 @@
 
 (:goal 
 (and
-    (box_at_wp green_box wp4)
-    (box_at_wp blue_box wp5)
-    (box_at_wp red_box wp6)
+    (box_at_wp green_box wp3)
+    (box_at_wp blue_box wp1)
+    (box_at_wp red_box wp2)
+ 
+    ;(wp_visited wp1)
+    (wp_visited wp2)
+    (wp_visited wp3)
+    (wp_visited wp4)
+    (wp_visited wp5)
+    (wp_visited wp6)
 )
 )
 
