@@ -4,7 +4,6 @@ RPMoveBaseInterface::RPMoveBaseInterface(ros::NodeHandle &nh) : _nh(nh), _mb_ac(
     while(!_mb_ac.waitForServer(ros::Duration(5.0))){
         ROS_INFO("Waiting for the move_base action server to come up");
     }
-
 }
 
 bool RPMoveBaseInterface::concreteCallback(
@@ -16,17 +15,17 @@ bool RPMoveBaseInterface::concreteCallback(
     goal.target_pose.header.frame_id = "map";
     goal.target_pose.header.stamp = ros::Time::now();
 
-    std::vector<double> position, orientation;
-    _nh.getParam("/wps/" + msg->parameters[0].value + "/position", position);
-    _nh.getParam("/wps/"+ msg->parameters[0].value + "/orientation", orientation);
+    std::map<std::string, double> position, orientation;
+    _nh.getParam("/waypoints/" + msg->parameters[0].value + "/position", position);
+    _nh.getParam("/waypoints/"+ msg->parameters[0].value + "/orientation", orientation);
 
-    goal.target_pose.pose.position.x = position[0];
-    goal.target_pose.pose.position.y = position[1];
-    goal.target_pose.pose.position.z = position[2];
-    goal.target_pose.pose.orientation.x = orientation[0];
-    goal.target_pose.pose.orientation.y = orientation[1];
-    goal.target_pose.pose.orientation.z = orientation[2];
-    goal.target_pose.pose.orientation.w = orientation[3];
+    goal.target_pose.pose.position.x = position["x"];
+    goal.target_pose.pose.position.y = position["y"];
+    goal.target_pose.pose.position.z = position["z"];
+    goal.target_pose.pose.orientation.x = orientation["x"];
+    goal.target_pose.pose.orientation.y = orientation["y"];
+    goal.target_pose.pose.orientation.z = orientation["z"];
+    goal.target_pose.pose.orientation.w = orientation["w"];
 
     ROS_INFO("Sending goal");
     _mb_ac.sendGoal(goal);
