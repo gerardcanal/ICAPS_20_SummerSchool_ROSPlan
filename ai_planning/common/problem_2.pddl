@@ -3,13 +3,13 @@
 
 (:objects
     robot1 - robot
-    wp1 wp2 wp3 wp4 wp5 wp6 - wp
+    wp1 wp2 wp3 wp4 wp5 wp6 init - wp
     green_box blue_box red_box - box
 )
 
 
 (:init 
-    (robot_at_wp robot1 wp1)
+    (robot_at_wp robot1 init)
     (robot_does_not_have_box robot1)
     (box_at_wp green_box wp1)
     (box_at_wp blue_box wp2)

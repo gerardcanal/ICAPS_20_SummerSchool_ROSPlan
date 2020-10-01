@@ -16,8 +16,8 @@ bool RPMoveBaseInterface::concreteCallback(
     goal.target_pose.header.stamp = ros::Time::now();
 
     std::map<std::string, double> position, orientation;
-    _nh.getParam("/waypoints/" + msg->parameters[0].value + "/position", position);
-    _nh.getParam("/waypoints/"+ msg->parameters[0].value + "/orientation", orientation);
+    _nh.getParam("/waypoints/" + msg->parameters[2].value + "/position", position);
+    _nh.getParam("/waypoints/"+ msg->parameters[2].value + "/orientation", orientation);
 
     goal.target_pose.pose.position.x = position["x"];
     goal.target_pose.pose.position.y = position["y"];
@@ -46,7 +46,7 @@ bool RPMoveBaseInterface::concreteCallback(
 /*-------------*/
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "rp_moveBase_interface", ros::init_options::AnonymousName);
+    ros::init(argc, argv, "rosplan_interface_move");
     ros::NodeHandle nh("~");
     // create PDDL action subscriber
     RPMoveBaseInterface rpti(nh);

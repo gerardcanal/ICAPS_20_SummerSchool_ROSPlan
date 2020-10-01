@@ -1,7 +1,8 @@
 #include "RPInterfaces/RPPlaceActionInterface.h"
 
 RPPlaceInterface::RPPlaceInterface(ros::NodeHandle &nh) : _nh(nh) {
-    ros::ServiceClient _placeclient = _nh.serviceClient<std_srvs::Trigger>("/place_gui");
+    _placeclient = _nh.serviceClient<std_srvs::Trigger>("/place_gui");
+    _placeclient.waitForExistence();
 }
 
 bool RPPlaceInterface::concreteCallback(
