@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- inclusion control arguments -->
+	<arg name="dispatcher" default="simple" /> <!-- simple, esterel or online -->
+
+	<!-- Commonly modified and compulsory arguments -->
+	<arg name="domain_path"/>
+	<arg name="problem_path"			  default="" />
+	<arg name="planning_language" />
+	<arg name="generated_problem_path"    default="$(find rosplan_demos)/common/problem.pddl" />
+	<arg name="planner_interface" /> <!-- example: popf_planner_interface -->
+	<arg name="planner_command" />   <!--example: timeout 10 $(find rosplan_planning_system)/common/bin/popf DOMAIN PROBLEM -->
+	
+	<!-- Not commonly modified arguments -->
+	<arg name="knowledge_base" 			  default="rosplan_knowledge_base" />
+	<arg name="planner_topic"  			  default="planner_output" />
+	<arg name="plan_topic"     			  default="complete_plan" />
+	<arg name="action_dispatch_topic"     default="action_dispatch" />
+	<arg name="action_feedback_topic"     default="action_feedback" />
+	<arg name="data_path"            	  default="$(find rosplan_demos)/common/" />
+	<arg name="use_unknowns" 			  default="false" />
+	<arg name="use_problem_topic"         default="true" />
+	<arg name="problem_topic"    		  default="problem_instance" />
+	<arg name="ippc_server_port" 		  default="3234" />
+    <arg name="compute_rewards" 		  default="true" />
+
+	<!-- INCLUDED FILES -->
+	<!-- knowledge base -->
+	<node name="$(arg knowledge_base)" pkg="rosplan_knowledge_base" type="knowledgeBase" respawn="false" output="screen">
+		<param name="domain_path"   value="$(arg domain_path)" />
+		<param name="problem_path"  value="$(arg problem_path)" />
+		<!-- conditional planning flags -->
+		<param name="use_unknowns" value="$(arg use_unknowns)" />
+	</node>
+
+	<!-- problem generation -->
+	<include file="$(find rosplan_planning_system)/launch/includes/problem_interface.launch">
+		<arg name="knowledge_base"    value="$(arg knowledge_base)" />
+		<arg name="domain_path"       value="$(arg domain_path)" />
+		<arg name="problem_path"      value="$(arg generated_problem_path)" />
+		<arg name="problem_topic"     value="$(arg problem_topic)" />
+		<arg name="planning_language" value="$(arg planning_language)" />
+	</include>
+
+	<!-- planner interface -->
+	<include file="$(find rosplan_planning_system)/launch/includes/planner_interface.launch">
+		<arg name="use_problem_topic"    value="$(arg use_problem_topic)" />
+		<arg name="problem_topic"        value="/rosplan_problem_interface/$(arg problem_topic)" />
+		<arg name="planner_topic"        value="$(arg planner_topic)" />
+		<arg name="domain_path"          value="$(arg domain_path)" />
+		<arg name="problem_path"         value="$(arg generated_problem_path)" />
+		<arg name="data_path"            value="$(arg data_path)" />
+		<arg name="planner_interface" 	 value="$(arg planner_interface)" />
+		<arg name="planner_command"      value="$(arg planner_command)" />
+	</include>
+
+	<group if="$(eval dispatcher == 'simple')" >
+		<!-- plan parsing -->
+		<node name="rosplan_parsing_interface" pkg="rosplan_planning_system" type="pddl_simple_plan_parser" respawn="false" output="screen">
+			<param name="knowledge_base" value="$(arg knowledge_base)" />
+			<param name="planner_topic"  value="/rosplan_planner_interface/$(arg planner_topic)" />
+			<param name="plan_topic"     value="$(arg plan_topic)" />
+		</node>
+
+		<!-- plan dispatching -->
+		<node name="rosplan_plan_dispatcher" pkg="rosplan_planning_system" type="pddl_simple_plan_dispatcher" respawn="false" output="screen">
+			<param name="knowledge_base"        value="$(arg knowledge_base)" />
+			<param name="plan_topic"            value="/rosplan_parsing_interface/$(arg plan_topic)" />
+			<param name="action_dispatch_topic" value="$(arg action_dispatch_topic)" />
+			<param name="action_feedback_topic" value="$(arg action_feedback_topic)" />
+		</node>
+	</group>
+
+	<group if="$(eval dispatcher == 'esterel')" >
+		<!-- plan parsing -->
+		<node name="rosplan_parsing_interface" pkg="rosplan_planning_system" type="pddl_esterel_plan_parser" respawn="false" output="screen">
+			<param name="knowledge_base" value="$(arg knowledge_base)" />
+			<param name="planner_topic"  value="/rosplan_planner_interface/$(arg planner_topic)" />
+			<param name="plan_topic"     value="$(arg plan_topic)" />
+		</node>
+
+		<!-- plan dispatching -->
+		<node name="rosplan_plan_dispatcher" pkg="rosplan_planning_system" type="pddl_esterel_plan_dispatcher" respawn="false" output="screen">
+			<param name="knowledge_base"        value="$(arg knowledge_base)" />
+			<param name="plan_topic"            value="/rosplan_parsing_interface/$(arg plan_topic)" />
+			<param name="action_dispatch_topic" value="$(arg action_dispatch_topic)" />
+			<param name="action_feedback_topic" value="$(arg action_feedback_topic)" />
+		</node>
+	</group>
+
+	<group if="$(eval dispatcher == 'online')" >
+		<!-- plan dispatching -->
+		<node name="rosplan_plan_dispatcher" pkg="rosplan_planning_system" type="online_plan_dispatcher" respawn="false" output="screen">
+			<param name="knowledge_base"        value="$(arg knowledge_base)" />
+			<param name="plan_topic"            value="/rosplan_parsing_interface/$(arg plan_topic)" />
+			<param name="action_dispatch_topic" value="$(arg action_dispatch_topic)" />
+			<param name="action_feedback_topic" value="$(arg action_feedback_topic)" />
+			<param name="ippc_server_port" 		value="$(arg ippc_server_port)" />
+            <param name="compute_rewards" 		value="$(arg compute_rewards)" />
+		</node>
+	</group>
+
+</launch>

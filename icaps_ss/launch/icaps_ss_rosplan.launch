@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="domain_path"		default="$(find ai_planning)/common/office_robot/domain_2.pddl" />
+	<arg name="problem_path"	default="$(find ai_planning)/common/office_robot/problem_2.pddl" />
+	<arg name="robot_name"	 	default="" />
+
+	<!-- Include rosplan -->
+	<include file="$(find icaps_ss)/launch/rosplan_full.launch">
+		<arg name="domain_path"		 		value="$(arg domain_path)" />
+		<arg name="problem_path" 			value="$(arg problem_path)" />
+		<arg name="planning_language" 		value="PDDL" />
+		<arg name="planner_topic" 			value="planner_output" />
+		<arg name="data_path" 				value="/tmp/" />
+		<arg name="generated_problem_path"	value="/tmp/gen_problem.pddl" />
+		<arg name="dispatcher" 				value="None" /> <!-- Check to add the parser when needed -->
+		<arg name="planner_command"      	value="timeout 10 $(find rosplan_planning_system)/common/bin/popf DOMAIN PROBLEM" />
+		<arg name="planner_interface"    	value="popf_planner_interface" />
+	</include>
+</launch>
