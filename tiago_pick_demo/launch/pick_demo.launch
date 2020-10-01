@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-  <arg name="rviz"  default="true"/>
+  <arg name="rviz"  default="false"/>
   <!-- marker detector -->
   <node pkg="aruco_ros" type="single"  name="aruco_single">
       <remap from="/camera_info"       to="/xtion/rgb/camera_info" />
@@ -32,5 +32,8 @@
   <group if="$(arg rviz)">
       <node name="pick_demo_rviz" pkg="rviz" type="rviz" args="-d $(find tiago_pick_demo)/config/rviz/tiago_pick_demo.rviz" />
   </group>
+
+
+  <node name="throttle" pkg="topic_tools" type="throttle" args="messages /xtion/depth_registered/points 2  /throttle_filtering_points/filtered_points"/>
 
 </launch>

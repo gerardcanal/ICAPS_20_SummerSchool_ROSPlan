@@ -1,6 +1,6 @@
 (define (domain plan_execution_workshop_domain)
 
-(:requirements :typing :durative-actions)
+(:requirements :typing :durative-actions :fluents)
 
 (:types robot wp box)
 
@@ -13,13 +13,13 @@
 )
 
 (:functions
-    (move_cost)
+    (distance ?a - wp ?b - wp)
     (manipulate_box_cost)
 )
 
 (:durative-action move
  :parameters (?robot - robot ?from - wp ?to - wp)
- :duration (= ?duration (move_cost))
+ :duration (= ?duration (distance ?from ?to))
  :condition (and
     (at start (robot_at_wp ?robot ?from))
     )
@@ -39,9 +39,9 @@
     (at start (robot_does_not_have_box ?robot))
     )
  :effect (and
-    (at start (not (box_at_wp ?box ?wp)))
+    (at end (not (box_at_wp ?box ?wp)))
     (at end (box_on_robot ?box ?robot))
-    (at start (not (robot_does_not_have_box ?robot)))
+    (at end (not (robot_does_not_have_box ?robot)))
     )
 )
 

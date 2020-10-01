@@ -1,5 +1,5 @@
 waypoints:
-  wp1:
+  wp1: # green box
     position:
       x: -0.5
       y: -2.5
@@ -9,9 +9,9 @@ waypoints:
       y: 0.0
       z: -1.0 
       w: 0.0
-  wp2:
+  wp2: # blue box
     position:
-      x: -1.5
+      x: -1.6
       y: 3.5
       z: 0.0
     orientation:
@@ -19,7 +19,7 @@ waypoints:
       y: 0.0
       z: -1.0 
       w: 0.0
-  wp3:
+  wp3: # red box
     position:
       x: -1.5
       y: 7.5

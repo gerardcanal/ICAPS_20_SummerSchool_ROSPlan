@@ -9,6 +9,8 @@
   <arg name="ft_sensor"  default="$(eval {'titanium': 'schunk-ft'}.get(arg('robot'), 'false'))"/>
   <arg name="laser_model"  default="sick-571"/>
   <arg name="camera_model"  default="orbbec-astra"/>
+  <arg name="use_moveit_camera" default="true"/>
+
 
   <arg name="world"  default="icaps20"/>
   <arg name="tuck_arm"  default="true"/>
@@ -51,6 +53,7 @@
       <arg name="gui"        value="$(arg gzclient)"/>
       <arg name="public_sim" value="$(arg public_sim)"/>
       <arg name="recording"  value="$(arg recording)"/>
+      <arg name="use_moveit_camera" value="$(arg use_moveit_camera)"/>
       <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>
       <arg if="$(eval local_planner == 'teb')" name="use_dynamic_footprint" value="true"/>
     </include>
