@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+	<arg name="domain_path"		default="$(find ai_planning)/common/domain_start.pddl" />
+	<arg name="problem_path"	default="$(find ai_planning)/common/problem_start.pddl" />
+	<arg name="robot_name"	 	default="" />
+
+	<include file="$(find icaps_ss)/launch/icaps_ss_rosplan.launch">
+		<arg name="domain_path"		 		value="$(arg domain_path)" />
+		<arg name="problem_path" 			value="$(arg problem_path)" />
+		<arg name="planning_language" 		value="PDDL" />
+	</include>
+
+	<include file="$(find tiago_pick_demo)/launch/pick_demo.launch">
+	</include>
+</launch>
