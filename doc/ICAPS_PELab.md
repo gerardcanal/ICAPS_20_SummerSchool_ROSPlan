@@ -158,6 +158,21 @@ This will launch all the needed ROS nodes for our system to work. More specifica
 
 A ROS node is an executable inside the ROS ecosystem, which is connected to other nodes by means of topics (which are pipes between nodes), services (blocking function calls from one node to another) and actions (non-blocking function calls).
 
+Notice that you can run the system with a custom domain and problem file by doing:
+
+```markdown
+roslaunch icaps_ss icaps_ss_full_system.launch domain_path:=<domain_path> problem_path:=<problem_path>
+```
+
+As an example:
+
+```
+cd /home/user/catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/ai_planning/common
+roslaunch icaps_ss icaps_ss_full_system.launch domain_path:=$PWD/domain_start.pddl problem_path:=$PWD/problem_start.pddl
+```
+
+
+
 Wait until everything has correctly launched, and you see something like the following in the terminal:
 
 ```
@@ -232,7 +247,7 @@ The [Robot Operating System](https://www.ros.org/) (ROS) is a set of tools to pr
 
 We have made a visit-all domain that you can find in the ai_planning package, which is inside the repository you downloaded.
 
-The domains are in `ai_planning/common/`. You should use the `domain_start.pddl` and the `problem_start.pddl`. Proposed solutions are already there, but we strongly encourage you to **not cheat** and try to solve the problems first.
+The domains are in `/home/user/catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/ai_planning/common`. You should use the `domain_start.pddl` and the `problem_start.pddl`. Proposed solutions are already there, but we strongly encourage you to **not cheat** and try to solve the problems first.
 
 Run the domain and see what the robot does. The robot should visit 6 waypoints (places where the robot needs to go, plus the initial position of the robot). Following, a depiction of where is each waypoint located:
 
@@ -256,6 +271,8 @@ Similar to what we did with the SM, let's add the option to move the objects. If
     You may also have to specify the initial state, so check where are the objects located!
 
 - Let's execute now the problem and see what happens. Is the planner able to find a plan? If not, can you find why and fix the issue? *Hint: check the domain file, and make sure the actions are correctly defined and make sense*
+
+Notice that the robot may fail to perform the grasps, or lose the box in the meantime. In such cases, the plan will continue as if the robot grasping was correct and place an invisible box.
 
 
 
@@ -288,6 +305,8 @@ for a in wp_names:
 
 The script obtains the coordinates of the waypoints which are stored in the ROS Parameter Server (and loaded by the launch scripts). It then prints the distances as PDDL predicates that you can add to your domain.
 
+You can run it by opening a python interpreter in a shell terminal. Remember to source the devel.bash! Then, you can type the `python` command in the terminal to run the interpreter, and paste the above script.
+
 
 
 Modify anything you need so that the planner uses this distance functions to minimize the traveled distance. 
@@ -319,15 +338,65 @@ You will probably have got to replan many times so far, when for instance the gr
   **COMPLETE THIS**
 
 - Although we simplified it in this lab, in a real robotics scenario the Knowledge Base that keeps an updated state will be kept up-to-date by using information from the robot sensors (for further info you can check the ROSPlan's Sensing Interface). Thus, a change in the environment will update the knowledge base, which may make the plan fail, for which then the robot will have to replan. This has a nice side effect, which is that the robot may be able to solve problems even when the model is not correct (i.e. unexpected side effects of an action that makes it fail). The robot will see that the next action can't be executed, and will replan accordingly. 
-  Now, let's simulate one of such events. While the robot is performing the task, execute:
+  Now, let's simulate one of such events. While the robot is performing the task, execute the following before it tries to grasp the green box. Run this command in a terminal (with the source setup.bash). 
 
+  The following line will remove the fact that the robot does not have a box:
+  
   ```
-  rostopic pub XXXXXXXXXXXXX
+rosservice call /rosplan_knowledge_base/update "update_type: 0
+  knowledge:
+  knowledge_type: 1
+    initial_time: {secs: 0, nsecs: 0}
+    is_negative: true
+    instance_type: ''
+    instance_name: ''
+    attribute_name: 'robot_does_not_have_box'
+    values:
+    - {key: '?robot', value: 'tiago'}
+    function_value: 0.0
+    optimization: ''
+    expr:
+      tokens: []
+    ineq:
+      comparison_type: 0
+      LHS:
+        tokens: []
+      RHS:
+        tokens: []
+      grounded: true" 
   ```
-
-  After executing this, the robot will **<explain what can't perform>**. Thus, the plan will fail, and a replan will be needed. **i'm thinking in moving the object from on table to another or something like this, or changing the place location while the robot is moving a block**
-
-  **Add also goals and something else**
+  
+  And the next one, will add the fact that the robot is holding the green box:
+  
+  ```
+  rosservice call /rosplan_knowledge_base/update "update_type: 0
+  knowledge:
+    knowledge_type: 1
+    initial_time: {secs: 0, nsecs: 0}
+    is_negative: true
+    instance_type: ''
+    instance_name: ''
+    attribute_name: 'robot_does_not_have_box'
+    values:
+    - {key: '?robot', value: 'tiago'}
+    function_value: 0.0
+    optimization: ''
+    expr:
+      tokens: []
+    ineq:
+      comparison_type: 0
+      LHS:
+        tokens: []
+      RHS:
+        tokens: []
+      grounded: true"
+  ```
+  
+  
+  
+  After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
+  
+  In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
   
   
 
