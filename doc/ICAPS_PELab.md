@@ -366,7 +366,7 @@ rosservice call /rosplan_knowledge_base/update "update_type: 0
       grounded: true" 
   ```
   
-  And the next one, will add the fact that the robot is holding the green box:
+And the next one, will add the fact that the robot is holding the green box:
   
   ```
   rosservice call /rosplan_knowledge_base/update "update_type: 0
