@@ -1,0 +1,87 @@
+(define (problem plan_execution_workshop_problem)
+(:domain plan_execution_workshop_domain)
+
+(:objects
+    tiago - robot
+    wp1 wp2 wp3 wp4 wp5 wp6 init - wp
+    green_box blue_box red_box - box
+)
+
+
+(:init 
+    (robot_at_wp tiago init)
+    (robot_does_not_have_box tiago)
+    (box_at_wp green_box wp1)
+    (box_at_wp blue_box wp2)
+    (box_at_wp red_box wp4)
+	
+    (= (distance init init) 0.0)
+    (= (distance init wp1) 2.57815825736)
+    (= (distance init wp2) 3.80788655293)
+    (= (distance init wp3) 7.64852927039)
+    (= (distance init wp4) 7.64852927039)
+    (= (distance init wp5) 1.58113883008)
+    (= (distance init wp6) 3.53553390593)
+    (= (distance wp1 init) 2.57815825736)
+    (= (distance wp1 wp1) 0.0)
+    (= (distance wp1 wp2) 6.06274690219)
+    (= (distance wp1 wp3) 10.0377736575)
+    (= (distance wp1 wp4) 10.2243288288)
+    (= (distance wp1 wp5) 3.6792526415)
+    (= (distance wp1 wp6) 3.13)
+    (= (distance wp2 init) 3.80788655293)
+    (= (distance wp2 wp1) 6.06274690219)
+    (= (distance wp2 wp2) 0.0)
+    (= (distance wp2 wp3) 4.0)
+    (= (distance wp2 wp4) 5.0)
+    (= (distance wp2 wp5) 4.24264068712)
+    (= (distance wp2 wp6) 7.21110255093)
+    (= (distance wp3 init) 7.64852927039)
+    (= (distance wp3 wp1) 10.0377736575)
+    (= (distance wp3 wp2) 4.0)
+    (= (distance wp3 wp3) 0.0)
+    (= (distance wp3 wp4) 3.0)
+    (= (distance wp3 wp5) 7.61577310586)
+    (= (distance wp3 wp6) 10.7703296143)
+    (= (distance wp4 init) 7.64852927039)
+    (= (distance wp4 wp1) 10.2243288288)
+    (= (distance wp4 wp2) 5.0)
+    (= (distance wp4 wp3) 3.0)
+    (= (distance wp4 wp4) 0.0)
+    (= (distance wp4 wp5) 7.0)
+    (= (distance wp4 wp6) 10.0498756211)
+    (= (distance wp5 init) 1.58113883008)
+    (= (distance wp5 wp1) 3.6792526415)
+    (= (distance wp5 wp2) 4.24264068712)
+    (= (distance wp5 wp3) 7.61577310586)
+    (= (distance wp5 wp4) 7.0)
+    (= (distance wp5 wp5) 0.0)
+    (= (distance wp5 wp6) 3.16227766017)
+    (= (distance wp6 init) 3.53553390593)
+    (= (distance wp6 wp1) 3.13)
+    (= (distance wp6 wp2) 7.21110255093)
+    (= (distance wp6 wp3) 10.7703296143)
+    (= (distance wp6 wp4) 10.0498756211)
+    (= (distance wp6 wp5) 3.16227766017)
+    (= (distance wp6 wp6) 0.0)
+    (= (manipulate_box_cost) 5)
+)
+
+(:goal 
+(and
+    (box_at_wp green_box wp3)
+    (box_at_wp blue_box wp1)
+    (box_at_wp red_box wp2)
+ 
+    (wp_visited wp1)
+    (wp_visited wp2)
+    (wp_visited wp3)
+    (wp_visited wp4)
+    (wp_visited wp5)
+    (wp_visited wp6)
+)
+)
+
+(:metric minimize total-time))
+
+

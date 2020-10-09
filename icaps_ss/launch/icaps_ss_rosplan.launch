@@ -2,6 +2,7 @@
 <launch>
 	<arg name="domain_path"		default="$(find ai_planning)/common/domain_2.pddl" />
 	<arg name="problem_path"	default="$(find ai_planning)/common/problem_2.pddl" />
+	<arg name="planning_language"	default="PDDL" />
 	<arg name="robot_name"	 	default="" />
 
 	<rosparam command="load" file="$(find tiago_navigation_icaps20)/config/waypoints.yaml" />
