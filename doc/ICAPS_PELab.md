@@ -333,7 +333,7 @@ You will probably have got to replan many times so far, when for instance the gr
 
 
 
-- ROSPlan uses Action Interfaces to link the abstract PDDL actions with the low-level robot constraints. The grasping action interface assumes that there will be an object there. Now, let's see what happens when no object is there, by moving it outside the side of view of Tiago. You can do this in simulation by changing the interaction mode to **Translation Mode** and then select the cube. 
+- ROSPlan uses Action Interfaces to link the abstract PDDL actions with the low-level robot constraints. The grasping action interface assumes that there will be an object there. Now, let's see what happens when one object, for example the **green** cube, is not there. You can move it outside the sight of view of Tiago. You can do this in simulation by changing the interaction mode to **Translation Mode** and then select the **green** cube. 
 
   **Pic**
 
@@ -341,14 +341,22 @@ You will probably have got to replan many times so far, when for instance the gr
 
   **Pic**
 
-- Now we can start the planning procedure. We can see that the robot is executing all planned tasks until the table where you have moved the cube. It remains there and do nothing. Thus, the entire planning process has blocked. The reason is that the pick module does not return any failure and thus, the action interface can not communicate to the planning module any result. Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 10 seconds). For that you can modify the file *pick_client.py*. You can navigate to this file with the following commands:
+- Now, we can start the planning procedure. We can see that the robot is executing all planned tasks until the pick one of the green cube. It remains there and do nothing, waiting infinitely to find the cube. Thus, the entire planning process has blocked. The reason is that the pick module does not return any failure and thus, the action interface can not communicate to the planning module any result. The planning module then waits infinitely to a result before continuing with the execution.
+
+- Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 10 seconds). For that you can modify the file *pick_client.py*. You can navigate to this file with the following commands:
 
   ```bash
   roscd tiago_pick_demo
   cd scripts
   ```
 
-  Now let's modify line 119 as follows:
+- Open it with
+
+  ```bash
+  nano pick_client.py
+  ```
+
+- Let's modify line 119 as follows:
 
   ```python
   #aruco_pose = rospy.wait_for_message('/aruco_single/pose', PoseStamped)
@@ -358,13 +366,13 @@ You will probably have got to replan many times so far, when for instance the gr
       return TriggerResponse(False, "Failed to recognize cube")
   ```
 
-  You have added a try-except block through which the command *rospy.wait_for_message('/aruco_single/pose', PoseStamped, 10)* is tried. In case that it fails and this would happen if no message arrives in *timeout = 10* seconds, the last parameter of the function call, the command following the *except* will be executed. In this case, the *TrigerredResponse* called from the Action Interface will be set to *false*. Thus, the *ActionInterface* will now be informed that the concrete execution of the planned PDDL action has failed and consequently the entire plan will fail. 
+  You have added a try-except block through which the command *rospy.wait_for_message('/aruco_single/pose', PoseStamped, 10)* is tried. In case that it fails and this would happen if no message about the recognized cube arrives in *timeout = 10* seconds (the last parameter of the function call) the command following the *except* key-word will be executed. In that case, the *TrigerredResponse* will be passed to the Action Interface as *false*. Thus, the Action Interface will now be informed that the concrete execution of the planned PDDL action has failed and consequently the entire plan will fail. 
 
-- Once you have done that you can restart the simulation and ROSPlan in order to check the changes. Move the **green** cube at a side of the table where it cannot be seen by Tiago and start the planning procedure with the bash file mentioned above. You should expect that all tasks until the grasping of the green cube will be executed as planned. The pick task will then fail and the entire plan will fail. You can see this in the terminal:
+- In order to check the changes you can restart the simulation and the planning module. Move the **green** cube at a side of the table where it cannot be seen by Tiago and start the planning procedure with the bash file mentioned above. You should expect that all tasks until the grasping of the green cube will be executed as planned. The pick task will then fail and the entire plan will fail. You can see this in the terminal:
 
   **PIC**
 
-- You can move the **green** cube back in the side of view of Tiago and re-call the planning procedure with:
+- You can move the **green** cube back in the sight of view of Tiago and re-call the planning procedure with:
 
   **PIC**
 
@@ -372,11 +380,11 @@ You will probably have got to replan many times so far, when for instance the gr
   rosrun icaps_ss main_executor.sh
   ```
 
-  A new plan should be generated and Tiago should start the grasping procedure of the green cube. This time it should end it successfully. 
+  A new plan should be generated and Tiago should start the grasping procedure of the green cube. This time it should end it successfully and continue with the planned tasks
 
   **PIC**
 
-  
+- ToDo: In this exercise you have learned that the translation 
 
 - **COMPLETE THIS** 
 
