@@ -333,9 +333,52 @@ You will probably have got to replan many times so far, when for instance the gr
 
 
 
-- ROSPlan uses Action Interfaces to link the abstract PDDL actions with the low-level robot constraints. The grasping action interface assumes that there will be an object there. Now, let's see what happens when no object is there, by removing it from the simulator before the robot goes there. This can be done by **XXXXX**. Once the robot arrives, it will stay forever there. Now, let's modify the action interface so the action fails after a timeout. 
+- ROSPlan uses Action Interfaces to link the abstract PDDL actions with the low-level robot constraints. The grasping action interface assumes that there will be an object there. Now, let's see what happens when no object is there, by moving it outside the side of view of Tiago. You can do this in simulation by changing the interaction mode to **Translation Mode** and then select the cube. 
 
-  **COMPLETE THIS**
+  **Pic**
+
+- You can move it for example at the other end of the table.
+
+  **Pic**
+
+- Now we can start the planning procedure. We can see that the robot is executing all planned tasks until the table where you have moved the cube. It remains there and do nothing. Thus, the entire planning process has blocked. The reason is that the pick module does not return any failure and thus, the action interface can not communicate to the planning module any result. Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 10 seconds). For that you can modify the file *pick_client.py*. You can navigate to this file with the following commands:
+
+  ```bash
+  roscd tiago_pick_demo
+  cd scripts
+  ```
+
+  Now let's modify line 119 as follows:
+
+  ```python
+  #aruco_pose = rospy.wait_for_message('/aruco_single/pose', PoseStamped)
+  try:
+      aruco_pose = rospy.wait_for_message('/aruco_single/pose', PoseStamped, 10)
+  except:
+      return TriggerResponse(False, "Failed to recognize cube")
+  ```
+
+  You have added a try-except block through which the command *rospy.wait_for_message('/aruco_single/pose', PoseStamped, 10)* is tried. In case that it fails and this would happen if no message arrives in *timeout = 10* seconds, the last parameter of the function call, the command following the *except* will be executed. In this case, the *TrigerredResponse* called from the Action Interface will be set to *false*. Thus, the *ActionInterface* will now be informed that the concrete execution of the planned PDDL action has failed and consequently the entire plan will fail. 
+
+- Once you have done that you can restart the simulation and ROSPlan in order to check the changes. Move the **green** cube at a side of the table where it cannot be seen by Tiago and start the planning procedure with the bash file mentioned above. You should expect that all tasks until the grasping of the green cube will be executed as planned. The pick task will then fail and the entire plan will fail. You can see this in the terminal:
+
+  **PIC**
+
+- You can move the **green** cube back in the side of view of Tiago and re-call the planning procedure with:
+
+  **PIC**
+
+  ```bash
+  rosrun icaps_ss main_executor.sh
+  ```
+
+  A new plan should be generated and Tiago should start the grasping procedure of the green cube. This time it should end it successfully. 
+
+  **PIC**
+
+  
+
+- **COMPLETE THIS** 
 
 - Although we simplified it in this lab, in a real robotics scenario the Knowledge Base that keeps an updated state will be kept up-to-date by using information from the robot sensors (for further info you can check the ROSPlan's Sensing Interface). Thus, a change in the environment will update the knowledge base, which may make the plan fail, for which then the robot will have to replan. This has a nice side effect, which is that the robot may be able to solve problems even when the model is not correct (i.e. unexpected side effects of an action that makes it fail). The robot will see that the next action can't be executed, and will replan accordingly. 
   Now, let's simulate one of such events. While the robot is performing the task, execute the following before it tries to grasp the green box. Run this command in a terminal (with the source setup.bash). 
@@ -366,8 +409,9 @@ rosservice call /rosplan_knowledge_base/update "update_type: 0
       grounded: true" 
   ```
   
+
 And the next one, will add the fact that the robot is holding the green box:
-  
+
   ```
   rosservice call /rosplan_knowledge_base/update "update_type: 0
   knowledge:
@@ -391,13 +435,13 @@ And the next one, will add the fact that the robot is holding the green box:
         tokens: []
       grounded: true"
   ```
+
   
-  
-  
+
   After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
-  
+
   In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
-  
+
   
 
 
