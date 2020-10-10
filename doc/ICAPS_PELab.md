@@ -335,11 +335,11 @@ You will probably have got to replan many times so far, when for instance the gr
 
 - ROSPlan uses Action Interfaces to link the abstract PDDL actions with the low-level robot constraints. The grasping action interface assumes that there will be an object there. Now, let's see what happens when one object, for example the **green** cube, is not there. You can move it outside the sight of view of Tiago. You can do this in simulation by changing the interaction mode to **Translation Mode** and then select the **green** cube. 
 
-  **Pic**
+  <img src="images/translation_mode.png" alt="image-20201009161107266" style="zoom:80%;" />
 
 - You can move it for example at the other end of the table.
 
-  **Pic**
+  <img src="images/green_cube_translated.png" alt="image-20201009161107266" style="zoom:80%;" />
 
 - Now, we can start the planning procedure. We can see that the robot is executing all planned tasks until the pick one of the green cube. It remains there and do nothing, waiting infinitely to find the cube. Thus, the entire planning process has blocked. The reason is that the pick module does not return any failure and thus, the action interface can not communicate to the planning module any result. The planning module then waits infinitely to a result before continuing with the execution.
 
