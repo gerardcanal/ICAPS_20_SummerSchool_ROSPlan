@@ -274,7 +274,7 @@ Similar to what we did with the SM, let's add the option to move the objects. If
 
 Notice that the robot may fail to perform the grasps, or lose the box in the meantime. In such cases, the plan will continue as if the robot grasping was correct and place an invisible box.
 
-
+green_cube_picked
 
 ### Exercise 3 - Adding costs
 
@@ -337,9 +337,15 @@ In order to be sure that the execution of a plan does not get stuck, the ROS mod
 
 Let's take as an example the implementation of the PDDL action **pick** . One of the called ROS modules assumes that there will be an object there. Now, let's see what happens when one object, for example the **green** cube, is not there. You can move it outside the field of view of Tiago. You can do this in simulation by changing the interaction mode to **Translation Mode** and then select the **green** cube. 
 
+
+
 <img src="images/translation_mode.png" style="zoom:80%;" />
 
+
+
 You can move it for example at the other end of the table.
+
+
 
 <img src="images/green_cube_translated.png" style="zoom:80%;" />
 
@@ -359,9 +365,15 @@ We can see that the robot is executing all planned tasks until the pick of the g
 
 <img src="images/tiago_waiting.png" style="zoom:80%;" />
 
+
+
 Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 30 seconds). For that you can modify the file *pick_client.py*. You can open from the *Tools* button an *IDE* and navigate in the overview window to *catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/tiago_pick_demo/scripts* and open the file *pick_client.py*.
 
+
+
 <img src="images/ide.png" style="zoom:80%;" />
+
+
 
 Let's modify line 119 as follows:
 
@@ -377,15 +389,25 @@ You have added a try-except block through which the command *rospy.wait_for_mess
 
 In order to check the changes you can restart the simulation and the planning module. Move the **green** cube at a side of the table where it cannot be seen by Tiago and start the planning procedure with the bash file mentioned above. You should expect that all tasks until the grasping of the green cube will be executed as planned. The pick task will then fail and the entire plan will fail. You can see this in the terminal:
 
+
+
 <img src="images/plan_failure.png" style="zoom:80%;" />
+
+
 
 You can move the **green** cube back in the field of view of Tiago and re-call the planning:
 
+
+
 <img src="images/replan.png" style="zoom:80%;" />
+
+
 
 A new plan should be generated and Tiago should start the grasping procedure of the green cube. This time it should end it successfully and continue with the planned tasks.
 
-**PIC**
+
+
+<img src="images/green_cube_picked.png" style="zoom:80%;" />
 
 In this exercise you have learned that the concrete implementations of the abstract PDDL actions must consider all success and failure states and be sure that after a given time one of those state is reached. Furthermore, that reached state must be then passed through the Actions Interfaces to the planning module which decides if the entire plan has failed or it can be started with the execution of the next planned action. In case of failure a re-plan command can be called. 
 
