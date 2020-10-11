@@ -413,39 +413,36 @@ In this exercise you have learned that the concrete implementations of the abstr
 
 
 
+## Exercise 6 - Planning changes based on sensing
 
+Although we simplified it in this lab, in a real robotics scenario the Knowledge Base that keeps an updated state will be kept up-to-date by using information from the robot sensors (for further info you can check the ROSPlan's Sensing Interface). Thus, a change in the environment will update the knowledge base, which may make the plan fail, for which then the robot will have to replan. This has a nice side effect, which is that the robot may be able to solve problems even when the model is not correct (i.e. unexpected side effects of an action that makes it fail). The robot will see that the next action can't be executed, and will replan accordingly. 
+Now, let's simulate one of such events. While the robot is performing the task, execute the following before it tries to grasp the green box. Run this command in a terminal (with the source setup.bash). 
 
-- **COMPLETE THIS** 
+The following line will remove the fact that the robot does not have a box:
 
-- Although we simplified it in this lab, in a real robotics scenario the Knowledge Base that keeps an updated state will be kept up-to-date by using information from the robot sensors (for further info you can check the ROSPlan's Sensing Interface). Thus, a change in the environment will update the knowledge base, which may make the plan fail, for which then the robot will have to replan. This has a nice side effect, which is that the robot may be able to solve problems even when the model is not correct (i.e. unexpected side effects of an action that makes it fail). The robot will see that the next action can't be executed, and will replan accordingly. 
-  Now, let's simulate one of such events. While the robot is performing the task, execute the following before it tries to grasp the green box. Run this command in a terminal (with the source setup.bash). 
-
-  The following line will remove the fact that the robot does not have a box:
-  
-  ```
+```
 rosservice call /rosplan_knowledge_base/update "update_type: 0
-  knowledge:
-  knowledge_type: 1
-    initial_time: {secs: 0, nsecs: 0}
-    is_negative: true
-    instance_type: ''
-    instance_name: ''
-    attribute_name: 'robot_does_not_have_box'
-    values:
-    - {key: '?robot', value: 'tiago'}
-    function_value: 0.0
-    optimization: ''
-    expr:
+knowledge:
+knowledge_type: 1
+  initial_time: {secs: 0, nsecs: 0}
+  is_negative: true
+  instance_type: ''
+  instance_name: ''
+  attribute_name: 'robot_does_not_have_box'
+  values:
+  - {key: '?robot', value: 'tiago'}
+  function_value: 0.0
+  optimization: ''
+  expr:
+    tokens: []
+  ineq:
+    comparison_type: 0
+    LHS:
       tokens: []
-    ineq:
-      comparison_type: 0
-      LHS:
-        tokens: []
-      RHS:
-        tokens: []
-      grounded: true" 
-  ```
-  
+    RHS:
+      tokens: []
+    grounded: true" 
+```
 
 And the next one, will add the fact that the robot is holding the green box:
 
@@ -475,9 +472,9 @@ And the next one, will add the fact that the robot is holding the green box:
 
   
 
-  After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
+After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
 
-  In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
+In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
 
   
 
