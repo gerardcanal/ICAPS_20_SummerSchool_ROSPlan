@@ -365,9 +365,15 @@ We can see that the robot is executing all planned tasks until the pick of the g
 
 <img src="images/tiago_waiting.png" style="zoom:80%;" />
 
+The **PickActionInterface** inherits ROSPlan's abstract ActionInterface class. This class automatically subscribes to the dispatcher topics, and checks that if it needs to execute its action, by calling a user-defined callback. It also checks the preconditions, and sets the effects of the action in the Knowledge Base. Let's see what the Pick Interface is doing. Open the file in `catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/icaps_ss/src/RPInterfaces/RPPickActionInterface.cpp` with the IDE:
+
+![image-20201011173323323](images/image-20201011173323323.png)
+
+There, you will see the callback that is being called when the action is dispatched. You will see that the callback mainly calls the service which is called `/pick_gui`. This service implements the pick action, waiting for the sensors detect the AR tag to pick the box.
 
 
-Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 30 seconds). For that you can modify the file *pick_client.py*. You can open from the *Tools* button an *IDE* and navigate in the overview window to *catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/tiago_pick_demo/scripts* and open the file `pick_client.py`.
+
+Now, let's modify the **pick** module such that it passes a response  to the action interface in case that the cube can not be recognized after a timeout (e.g. 30 seconds). For that you can modify the file *pick_client.py*. You can open from the *Tools* button an *IDE* and navigate in the overview window to `catkin_ws/src/ICAPS_20_SummerSchool_ROSPlan/tiago_pick_demo/scripts  and open the file `pick_client.py`.
 
 
 
@@ -385,7 +391,7 @@ except:
     return TriggerResponse(False, "Failed to recognize cube")
 ```
 
-You have added a try-except block through which the command `rospy.wait_for_message('/aruco_single/pose', PoseStamped, 30)` is tried. In case that it fails and this would happen if no message about the recognized cube arrives in `timeout = 30` seconds (the last parameter of the function call) the command following the *except* key-word will be executed. In that case, the *TrigerredResponse* will be passed to the Action Interface as *false*. Thus, the Action Interface will now inform the planning module that the concrete execution of the planned **pick** PDDL action has failed and consequently the entire plan will fail. 
+You have added a try-except block through which the command `rospy.wait_for_message('/aruco_single/pose', PoseStamped, 30)` is tried. In case that it fails and this would happen if no message about the recognized cube arrives in `timeout = 30` seconds (the last parameter of the function call) the command following the *except* key-word will be executed. In that case, the `TrigerredResponse ` will be passed to the Action Interface as *false*. Thus, the Action Interface will now inform the planning module that the concrete execution of the planned **pick** PDDL action has failed and consequently the entire plan will fail. 
 
 In order to check the changes you can restart the simulation and the planning module. Move the **green** cube at a side of the table where it cannot be seen by Tiago and start the planning procedure with the bash file mentioned above. You should expect that all tasks until the grasping of the green cube will be executed as planned. The pick task will then fail and the entire plan will fail. You can see this in the terminal:
 
@@ -470,9 +476,6 @@ And the next one, will add the fact that the robot is holding the green box:
       grounded: true"
   ```
 
-  
-
 After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
 
 In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
-
