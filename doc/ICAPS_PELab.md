@@ -413,7 +413,7 @@ In this exercise you have learned that the concrete implementations of the abstr
 
 
 
-## Exercise 6 - Planning changes based on sensing
+### Exercise 6 - Planning changes based on sensing
 
 Although we simplified it in this lab, in a real robotics scenario the Knowledge Base that keeps an updated state will be kept up-to-date by using information from the robot sensors (for further info you can check the ROSPlan's Sensing Interface). Thus, a change in the environment will update the knowledge base, which may make the plan fail, for which then the robot will have to replan. This has a nice side effect, which is that the robot may be able to solve problems even when the model is not correct (i.e. unexpected side effects of an action that makes it fail). The robot will see that the next action can't be executed, and will replan accordingly. 
 Now, let's simulate one of such events. While the robot is performing the task, execute the following before it tries to grasp the green box. Run this command in a terminal (with the source setup.bash). 
