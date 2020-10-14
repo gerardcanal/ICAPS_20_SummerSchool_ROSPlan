@@ -34,7 +34,7 @@ After loading (this may take a while), you should see this screen:
 
 Now, we're ready to go!
 
-## Exercise 1 - Preparation of the workspace
+## Preliminary Exercise 1 - Preparation of the workspace
 
 We have prepared a base source code for you to develop. The simulation includes all the needed code already, but the exercises will need you to fork our repository and install it in the construct.
 
@@ -98,7 +98,7 @@ Ideally, the robot should do this in an efficient manner, therefore taking as fe
 
 
 
-## Exercise 3 -  Running the simulation
+## Preliminary Exercise 2 -  Running the simulation
 
 Let's now run the simulation to open the virtual world. In the construct, press in Simulations:
 
@@ -138,7 +138,7 @@ If for some reason Tiago has two arms, refresh the simulation using the refresh 
 
 
 
-## Exercise 4 - Running more than the simulation
+## Preliminary Exercise 3 - Running more than the simulation
 
 Now that we have the simulator running, let's see what do we need to run in order to test the planning system. 
 
