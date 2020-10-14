@@ -15,7 +15,8 @@
 		<arg name="planner_topic" 			value="planner_output" />
 		<arg name="data_path" 				value="/tmp/" />
 		<arg name="generated_problem_path"	value="/tmp/gen_problem.pddl" />
-		<arg name="dispatcher" 				value="simple" />
+		<arg name="dispatcher" 				value="esterel" />
+		<arg name="timeout_actions" 		value="false" />
 		<arg name="planner_command"      	value="timeout 3 $(find rosplan_planning_system)/common/bin/popf -n DOMAIN PROBLEM" />
 		<arg name="planner_interface"    	value="popf_planner_interface" />
 	</include>

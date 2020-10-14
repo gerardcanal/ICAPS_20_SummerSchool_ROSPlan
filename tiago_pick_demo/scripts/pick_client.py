@@ -199,6 +199,7 @@ class PickAruco(object):
             # Place the object back to its position
             rospy.loginfo("Gonna place near where it was")
             pick_g.object_pose.pose.position.z += 0.05
+            pick_g.object_pose.pose.position.y -= 0.35
             self.place_as.send_goal_and_wait(pick_g)
             rospy.loginfo("Done!")
             # Move to safe
@@ -209,12 +210,12 @@ class PickAruco(object):
                 home = self.move_arm_home()
                 i += 1
                 rospy.sleep(0.5)
-            self.pick_g = None
 
             result = self.place_as.get_result()
             if str(moveit_error_dict[result.error_code]) != "SUCCESS":
                 rospy.logerr("Failed to place")
                 return TriggerResponse(False, "Failed to place")
+            self.pick_g = None
             return TriggerResponse(True, "Succeeded")
 
     def lift_torso(self):

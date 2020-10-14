@@ -53,7 +53,7 @@ def createPickupGoal(group="arm_torso", target="part",
     pug.target_name = target
     pug.group_name = group
     pug.possible_grasps.extend(possible_grasps)
-    pug.allowed_planning_time = 35.0
+    pug.allowed_planning_time = 45.0
     pug.planning_options.planning_scene_diff.is_diff = True
     pug.planning_options.planning_scene_diff.robot_state.is_diff = True
     pug.planning_options.plan_only = False
@@ -275,6 +275,7 @@ class PickAndPlaceServer(object):
         # # We need to wait for the object part to appear
         #self.wait_for_planning_scene_object()
         self.wait_for_planning_scene_object("table")
+        rospy.sleep(0.5)
 
 if __name__ == '__main__':
     rospy.init_node('pick_and_place_server')

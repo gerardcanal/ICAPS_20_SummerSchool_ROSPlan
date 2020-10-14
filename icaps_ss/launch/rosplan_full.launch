@@ -24,6 +24,7 @@
 	<arg name="problem_topic"    		  default="problem_instance" />
 	<arg name="ippc_server_port" 		  default="3234" />
     <arg name="compute_rewards" 		  default="true" />
+    <arg name="timeout_actions" 		  default="false" />
 
 	<!-- INCLUDED FILES -->
 	<!-- knowledge base -->
@@ -86,6 +87,7 @@
 			<param name="plan_topic"            value="/rosplan_parsing_interface/$(arg plan_topic)" />
 			<param name="action_dispatch_topic" value="$(arg action_dispatch_topic)" />
 			<param name="action_feedback_topic" value="$(arg action_feedback_topic)" />
+			<param name="timeout_actions" value="$(arg timeout_actions)" />
 		</node>
 	</group>
 

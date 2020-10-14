@@ -317,7 +317,7 @@ Modify anything you need so that the planner uses this distance functions to min
 
 After completing exercise 3, the robot should minimize the number of waypoints visited, so that the total time is lower. This should be a big advance to the SM approach, and should have been way easier to implement. 
 
-However, following this approach, you should see something strange. The robot some times leaves the green cube in the wpXX, and then goes through the door to get the blue cube instead of getting the red one which is closer.
+However, following this approach, you should see something strange. In some executions, it may happen that the robot starts by grasping the green cube, leaves it in the wp3, and then goes through the door to get the blue cube instead of getting the red one which is closer.
 
 Can you see why this would happen? How can you fix it? 
 
@@ -479,3 +479,12 @@ And the next one, will add the fact that the robot is holding the green box:
 After executing this, the Knowledge Base will be updated to add the `box_on_robot`predicate. Now, when the robot tries to grasp the green_box, the action interface will see that the preconditions do not hold and thus the plan will fail. Then, once you try to replan and execute the plan again, the planner will assume that the box has been picked and will proceed with the plan as if this happened, but the robot will have not attempted the grasp.
 
 In a similar case, the sensors may update the information on the Knowledge Base based on sensors, actions may fail, and a replan will start from an updated state of the world. Ideally, instead of mocking a grasp action, the robot could sens that the gripper is empty and then retry the grasp action, based on sensor information in an automatic manner.
+
+
+
+### Bonus exercise - Only one block per position
+
+You may have observed that the planner tries to optimize the plan duration by placing objects in positions where a new object needs to be picked. While this makes sense and may be useful, placing the object may knock down the object that's already there, or the object detector may detect the object that has just been placed and grasp it again.
+
+Solve this by modifying the domain file so that only one box can is allowed to be at the same waypoint. 
+
