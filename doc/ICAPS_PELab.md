@@ -10,7 +10,7 @@ We will use [The Construct](https://www.theconstructsim.com/) as the simulation 
 
 
 
-To start with, you will need to create an account [here](rds.theconstructsim.com). Once you have your account, log in the [ROS Development Studio](rds.theconstructsim.com), and you will have your workspace.
+To start with, you will need to create an account [here](https://rds.theconstructsim.com). Once you have your account, log in the [ROS Development Studio](https://rds.theconstructsim.com), and you will have your workspace.
 
 The next step is to fork the base simulator. Note that each fork is an own copy, so it's like you were working on your computer. While simulations are public, the files will only be modifiable by you, so be sure to use an appropriate way of sharing code with your group (more on that later).
 
