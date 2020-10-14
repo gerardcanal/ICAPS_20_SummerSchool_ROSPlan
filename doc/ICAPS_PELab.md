@@ -315,7 +315,7 @@ Modify anything you need so that the planner uses this distance functions to min
 
 ### Exercise 4 - The real world is more complicated
 
-After completing exercise 4, the robot should minimize the number of waypoints visited, so that the total time is lower. This should be a big advance to the SM approach, and should have been way easier to implement. 
+After completing exercise 3, the robot should minimize the number of waypoints visited, so that the total time is lower. This should be a big advance to the SM approach, and should have been way easier to implement. 
 
 However, following this approach, you should see something strange. The robot some times leaves the green cube in the wpXX, and then goes through the door to get the blue cube instead of getting the red one which is closer.
 
