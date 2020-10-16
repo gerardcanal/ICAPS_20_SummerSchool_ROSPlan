@@ -457,11 +457,12 @@ And the next one, will add the fact that the robot is holding the green box:
   knowledge:
     knowledge_type: 1
     initial_time: {secs: 0, nsecs: 0}
-    is_negative: true
+    is_negative: false
     instance_type: ''
     instance_name: ''
-    attribute_name: 'robot_does_not_have_box'
+    attribute_name: 'box_on_robot'
     values:
+    - {key: '?box', value: 'green_box'}
     - {key: '?robot', value: 'tiago'}
     function_value: 0.0
     optimization: ''
