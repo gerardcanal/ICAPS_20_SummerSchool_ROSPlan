@@ -274,7 +274,6 @@ Similar to what we did with the SM, let's add the option to move the objects. If
 
 Notice that the robot may fail to perform the grasps, or lose the box in the meantime. In such cases, the plan will continue as if the robot grasping was correct and place an invisible box.
 
-green_cube_picked
 
 ### Exercise 3 - Adding costs
 
